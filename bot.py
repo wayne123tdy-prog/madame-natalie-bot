@@ -123,5 +123,21 @@ def get_text_messages(message):
         )
         bot.send_message(message.chat.id, info_text, parse_mode="Markdown")
 
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running")
+
+def run_server():
+    server = HTTPServer(('0.0.0.0', 10000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
+
 print("Бот успешно запущен на компьютере!")
 bot.infinity_polling()
+
