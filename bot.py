@@ -21,7 +21,6 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     
-    # 1. НАЖАЛИ НА КНОПКУ "ЦЕНЫ" -> Показываем выбор процедур
     if message.text == "Цены 💰":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn_keratin = types.KeyboardButton("Кератин ✨")
@@ -34,7 +33,6 @@ def get_text_messages(message):
         
         bot.send_message(message.chat.id, "Какая процедура вас интересует? 🤔", reply_markup=markup)
 
-    # ================= КЕРАТИН =================
     elif message.text == "Кератин ✨":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("Кератин 40-45 см"), types.KeyboardButton("Кератин 50-55 см"))
@@ -42,7 +40,6 @@ def get_text_messages(message):
         markup.add(types.KeyboardButton("Кератин 80-85 см"), types.KeyboardButton("⬅️ Назад в меню"))
         bot.send_message(message.chat.id, "Выбери длину волос для Кератина:", reply_markup=markup)
 
-    # Цены на Кератин (твои старые цены)
     elif message.text == "Кератин 40-45 см":
         bot.send_message(message.chat.id, "💰 Стоимость Кератина (40-45 см): **2500 грн**")
     elif message.text == "Кератин 50-55 см":
@@ -54,7 +51,6 @@ def get_text_messages(message):
     elif message.text == "Кератин 80-85 см":
         bot.send_message(message.chat.id, "💰 Стоимость Кератина (80-85 см): **4500 грн**")
 
-    # ================= БОТОКС =================
     elif message.text == "Ботокс 💧":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("Ботокс 40-45 см"), types.KeyboardButton("Ботокс 50-55 см"))
@@ -62,7 +58,6 @@ def get_text_messages(message):
         markup.add(types.KeyboardButton("Ботокс 80-85 см"), types.KeyboardButton("⬅️ Назад в меню"))
         bot.send_message(message.chat.id, "Выбери длину волос для Ботокса:", reply_markup=markup)
 
-    # Цены на Ботокс (я поставил примерные, поменяй как скажет мама!)
     elif message.text == "Ботокс 40-45 см":
         bot.send_message(message.chat.id, "💰 Стоимость Ботокса (40-45 см): **2000 грн**")
     elif message.text == "Ботокс 50-55 см":
@@ -74,7 +69,6 @@ def get_text_messages(message):
     elif message.text == "Ботокс 80-85 см":
         bot.send_message(message.chat.id, "💰 Стоимость Ботокса (80-85 см): **3600 грн**")
 
-    # ================= ВОССТАНОВЛЕНИЕ =================
     elif message.text == "Восстановление 🌿":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("Восстановление 40-45 см"), types.KeyboardButton("Восстановление 50-55 см"))
@@ -82,7 +76,6 @@ def get_text_messages(message):
         markup.add(types.KeyboardButton("Восстановление 80-85 см"), types.KeyboardButton("⬅️ Назад в меню"))
         bot.send_message(message.chat.id, "Выбери длину волос для Восстановления:", reply_markup=markup)
 
-    # Цены на Восстановление (тоже примерные, измени под себя)
     elif message.text == "Восстановление 40-45 см":
         bot.send_message(message.chat.id, "💰 Стоимость Восстановления (40-45 см): **600 грн**")
     elif message.text == "Восстановление 50-55 см":
@@ -94,7 +87,6 @@ def get_text_messages(message):
     elif message.text == "Восстановление 80-85 см":
         bot.send_message(message.chat.id, "💰 Стоимость Восстановления (80-85 см): **1800 грн**")
 
-    # ================= ОСТАЛЬНЫЕ КНОПКИ ГЛАВНОГО МЕНЮ =================
     elif message.text == "⬅️ Назад в меню":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Цены 💰")
@@ -123,6 +115,7 @@ def get_text_messages(message):
         )
         bot.send_message(message.chat.id, info_text, parse_mode="Markdown")
 
+import time
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -139,5 +132,12 @@ def run_server():
 threading.Thread(target=run_server, daemon=True).start()
 
 print("Бот успешно запущен на компьютере!")
-bot.infinity_polling()
+
+# БРОНЕБОЙНЫЙ ЗАПУСК: Если бот упадет от сбоя сети, этот цикл поднимет его заново!
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0, timeout=20)
+    except Exception as e:
+        print(f"Произошла ошибка: {e}. Перезапуск бота через 5 секунд...")
+        time.sleep(5)
 
