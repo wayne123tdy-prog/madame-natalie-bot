@@ -1,9 +1,9 @@
+import os
 import telebot
 from telebot import types
 
-TOKEN = '8124000308:AAG1xDqEO1N093tc_0OfRelaUl-cnK0-aY0'
+TOKEN = os.environ.get('BOT_TOKEN', '8124000308:AAEuzXpgZIyIIkr66uv7QGNPe6Lnl2fwhBA')
 bot = telebot.TeleBot(TOKEN)
-
 
 @bot.message_handler(commands=['start'])
 def start(message):
